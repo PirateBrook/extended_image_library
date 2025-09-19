@@ -318,6 +318,7 @@ class ExtendedNetworkImageProvider
       cancelToken: cancelToken,
       timeRetry: timeRetry,
       retries: retries,
+      throwThenExpction: () => true,
     );
   }
 
