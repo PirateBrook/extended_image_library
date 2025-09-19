@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:ui' as ui show Codec;
+import 'package:extended_image_library/src/exposed/logger.dart';
 import 'package:extended_image_library/src/extended_image_provider.dart';
 import 'package:extended_image_library/src/platform.dart';
 import 'package:flutter/foundation.dart';
@@ -225,6 +226,7 @@ class ExtendedNetworkImageProvider
     StreamController<ImageChunkEvent>? chunkEvents,
   ) async {
     try {
+      final Stopwatch stopwatch = Stopwatch()..start();
       final Uri resolved = Uri.base.resolve(key.url);
       final HttpClientResponse? response = await _tryGetResponse(resolved);
       if (response == null || response.statusCode != HttpStatus.ok) {
@@ -251,6 +253,12 @@ class ExtendedNetworkImageProvider
                 }
                 : null,
       );
+      extendImageLoadLogger.logEvent(<String, Object>{
+        'url': key.url,
+        'duration': stopwatch.elapsedMilliseconds,
+        'status_code': response.statusCode,
+        'size': response.contentLength,
+      });
       if (bytes.lengthInBytes == 0) {
         return Future<Uint8List>.error(
           StateError('NetworkImage is an empty file: $resolved'),
@@ -267,6 +275,10 @@ class ExtendedNetworkImageProvider
       if (printError) {
         print(e);
       }
+      extendImageLoadLogger.logEvent(<String, Object>{
+        'url': key.url,
+        'err': e.toString(),
+      });
       // [ExtendedImage.clearMemoryCacheIfFailed] can clear cache
       // Depending on where the exception was thrown, the image cache may not
       // have had a chance to track the key in the cache at all.
