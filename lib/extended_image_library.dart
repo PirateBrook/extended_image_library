@@ -9,3 +9,4 @@ export 'src/extended_memory_image_provider.dart';
 export 'src/extended_resize_image_provider.dart';
 export 'src/network/extended_network_image_provider.dart';
 export 'src/platform.dart';
+export 'src/exposed/logger.dart';
