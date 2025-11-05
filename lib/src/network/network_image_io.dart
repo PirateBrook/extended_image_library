@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:ui' as ui show Codec;
+import 'package:extended_image_library/extended_image_library.dart';
 import 'package:extended_image_library/src/exposed/logger.dart';
 import 'package:extended_image_library/src/extended_image_provider.dart';
 import 'package:extended_image_library/src/platform.dart';
@@ -383,7 +384,7 @@ class ExtendedNetworkImageProvider
       HttpClient()..autoUncompress = false;
 
   static HttpClient get httpClient {
-    HttpClient client = _sharedHttpClient;
+    HttpClient client = CustomHttpClient().client ?? _sharedHttpClient;
     assert(() {
       if (debugNetworkImageHttpClientProvider != null) {
         client = debugNetworkImageHttpClientProvider!();
