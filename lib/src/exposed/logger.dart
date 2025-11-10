@@ -7,10 +7,16 @@ class ExtendImageLoadLogger {
       StreamController<Map<String, Object>>.broadcast();
 
   void logEvent(Map<String, Object> params) {
+    if (eventStream.isClosed) {
+      return;
+    }
     eventStream.add(params);
   }
 
   void listenEvent(Function(Map<String, Object> params) onEvent) {
+    if (eventStream.isClosed) {
+      return;
+    }
     eventStream.stream.listen(onEvent);
   }
 }
